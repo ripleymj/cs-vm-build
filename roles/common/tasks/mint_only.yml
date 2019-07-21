@@ -16,6 +16,20 @@
     owner: root
     group: root
 
+- name: Install Mint mirror list
+  copy:
+    src: mint.mirror
+    dest: /etc/apt/mint.mirror
+    owner: root
+    group: root
+    mode: 0664
+- name: Install Ubuntu mirror list
+  copy:
+    src: ubuntu.mirror
+    dest: /etc/apt/ubuntu.mirror
+    owner: root
+    group: root
+    mode: 0664
 - name: Set Linux Mint mirrors
   ansible.builtin.template:
     src: mint.j2

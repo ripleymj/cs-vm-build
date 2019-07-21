@@ -1,6 +1,13 @@
 ---
 # tasks file for Ubuntu
 
+- name: Install Ubuntu mirror list
+  copy:
+    src: ubuntu.mirror
+    dest: /etc/apt/ubuntu.mirror
+    owner: root
+    group: root
+    mode: 0664
 - name: Set Ubuntu mirrors
   ansible.builtin.template:
     src: ubuntu.j2
