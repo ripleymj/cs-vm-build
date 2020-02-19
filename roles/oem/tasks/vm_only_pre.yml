@@ -11,3 +11,20 @@
     path: /var/lib/dpkg/arch
     state: absent
     line: 'i386'
+
+- name: Copy oem-preseed file
+  copy:
+    src: oem-preseed.cfg
+    dest: /oem-preseed.cfg
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Load debconf settings
+  command: /usr/bin/debconf-set-selections /oem-preseed.cfg
+
+- name: Force Ubiquity automatic mode
+  lineinfile:
+    path: /usr/lib/oem-config/oem-config.service
+    insertbefore: '    exec'
+    line: '    automatic=--automatic; \'
