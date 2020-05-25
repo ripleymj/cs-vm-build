@@ -27,6 +27,11 @@
     value: /dev/sda
     vtype: multiselect
 
+- name: Regenerate kernel autoremove policy
+  command: /etc/kernel/postinst.d/apt-auto-removal
+  args:
+    creates: /etc/apt/apt.conf.d/01autoremove-kernels
+
 # The apt database can be fairly large and make the image unnecessarily large
 # so removing it before shipping allows us to ship a smaller image.
 - name: Clean the apt package cache

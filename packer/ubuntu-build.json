@@ -113,7 +113,16 @@
       "apt-get install -V -y git ansible aptitude",
       "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
       "cd /home/oem/cs-vm-build/scripts",
-      "./oem-build",
+      "./oem-stage1.sh"
+    ],
+    "expect_disconnect": "true"
+  },{ 
+    "type": "shell",
+    "pause_before": "10s",
+    "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+    "inline": [
+      "cd /home/oem/cs-vm-build/scripts",
+      "./oem-stage2.sh",
       "/usr/sbin/oem-config-prepare"
     ]
   }],

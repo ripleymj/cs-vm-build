@@ -7,6 +7,10 @@
   apt:
     autoremove: yes
     purge: yes
+- name: Install dependencies
+  apt:
+    name: "{{ packages_to_install }}"
+    state: latest
 - name: Create the /usr/local/share/applications folder
   file:
     path: /usr/local/share/applications

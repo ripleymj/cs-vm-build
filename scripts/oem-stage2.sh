@@ -55,6 +55,8 @@ main () {
         exit 1
     fi
 
+    export DEBIAN_FRONTEND=noninteractive
+
     user "Updating apt package cache"
     apt-get update
 
