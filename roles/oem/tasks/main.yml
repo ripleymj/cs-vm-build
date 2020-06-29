@@ -7,6 +7,44 @@
   apt:
     autoremove: yes
     purge: yes
+
+- name: Set debconf grub install_devices
+  debconf:
+    name: d-i
+    question: debian-installer/locale
+    value: en_US.UTF-8
+    vtype: string
+- name: Set debconf grub install_devices
+  debconf:
+    name: d-i
+    question: debian-installer/language
+    value: en
+    vtype: string
+- name: Set debconf grub install_devices
+  debconf:
+    name: d-i
+    question: debian-installer/country
+    value: US
+    vtype: string
+- name: Set debconf grub install_devices
+  debconf:
+    name: d-i
+    question: keyboard-configuration/layoutcode
+    value: us
+    vtype: string
+- name: Set debconf grub install_devices
+  debconf:
+    name: d-i
+    question: clock-setup/ntp
+    value: false
+    vtype: boolean
+- name: Set debconf grub install_devices
+  debconf:
+    name: d-i
+    question: time/zone
+    value: US/Eastern
+    vtype: string
+
 - name: Create the /usr/local/share/applications folder
   file:
     path: /usr/local/share/applications
