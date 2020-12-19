@@ -98,6 +98,14 @@
     }
   ],
   "provisioners": [{
+      "type": "ansible",
+      "playbook_file": "../oem.yml",
+      "extra_arguments":
+        [
+          "--extra-vars",
+          "ansible_become_pass={{user `ssh_pass`}}"
+        ]
+  },{
     "type": "shell",
     "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
     "inline": [
