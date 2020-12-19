@@ -98,6 +98,9 @@
     }
   ],
   "provisioners": [{
+      "type": "ansible",
+      "playbook_file": "../oem.yml"
+  },{
     "type": "shell",
     "execute_command": "echo 'oem' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
     "inline": [
