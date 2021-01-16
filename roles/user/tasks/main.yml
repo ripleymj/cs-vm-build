@@ -48,6 +48,21 @@
     group: root
     # prevent overwriting
     force: no
+- name: Create .ssh directory
+  file:
+    path: '{{ item.homedir }}/.ssh'
+    state: directory
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    mode: 0700
+  with_items: "{{ real_users }}"
+- name: Trust JMU CS student server SSH
+  known_hosts:
+    path: '{{ item.homedir }}/.ssh/known_hosts'
+    name: stu.cs.jmu.edu
+    key: "{{ stu_host_key }}"
+    state: present
+  with_items: "{{ real_users }}"
 - name: Ensure user home directory exists
   file:
     path: "{{ item.homedir }}"
