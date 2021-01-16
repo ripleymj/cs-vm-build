@@ -61,6 +61,7 @@
     path: '{{ item.homedir }}/.ssh/known_hosts'
     name: stu.cs.jmu.edu
     key: "{{ stu_host_key }}"
+    hash_host: yes
     state: present
   with_items: "{{ real_users }}"
 - name: Ensure user home directory exists
