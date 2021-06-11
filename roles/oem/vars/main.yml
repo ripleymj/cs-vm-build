@@ -60,7 +60,6 @@ packages_to_remove:
   - hyphen-pt*
   - hyphen-ru
   - libreoffice*
-  - linux*oem
   - mint-artwork-mate
   - mint-backgrounds-sarah
   - mint-backgrounds-serena
