@@ -1,9 +1,8 @@
 {
-  "min_packer_version": "1.7.1",
+  "min_packer_version": "1.6.0",
   "variables": {
-    "vm_name": "JMU Linux Mint",
+    "vm_name": "JMU Ubuntu",
     "semester": "Fa21",
-    "version": "20",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -12,7 +11,7 @@
 
     "headless": "false",
 
-    "output_dir": "{{pwd}}/artifacts_mint",
+    "output_dir": "{{pwd}}/{{user `vm_name`}} {{user `semester`}}.utm/Images",
     "mirror_url": "http://cdimage.ubuntu.com/focal/daily-live/current",
     "iso_file": "focal-desktop-arm64.iso",
 
@@ -27,9 +26,9 @@
       "accelerator": "kvm",
       "memory": 4096,
       "machine_type": "virt",
-      "firmware": "/usr/share/qemu-efi-aarch64/QEMU_EFI.fd",
       "qemu_binary": "qemu-system-aarch64",
       "qemuargs": [
+        [ "-bios", "/usr/share/qemu-efi-aarch64/QEMU_EFI.fd" ],
         [ "-boot", "strict=off" ],
         [ "-vga", "vmware" ],
         [ "-cpu", "host" ],
@@ -53,10 +52,10 @@
       "ssh_username": "{{user `ssh_user`}}",
       "ssh_password": "{{user `ssh_pass`}}",
       "ssh_timeout": "100m",
-      "vm_name": "{{user `vm_name`}} {{user `semester`}}",
+      "vm_name": "image.qcow2",
       "net_device": "virtio-net",
       "disk_interface": "virtio",
-      "boot_wait": "15s",
+      "boot_wait": "25s",
       "boot_command": [
         "c<wait><wait>",
         "linux /casper/vmlinuz",
@@ -83,12 +82,5 @@
       "./oem-build",
       "/usr/sbin/oem-config-prepare"
     ]
-  }],
-  "post-processors": [
-    {
-      "type": "checksum",
-      "checksum_types": "sha256",
-      "output": "{{user `output_dir`}}/image-{{user `semester` | lower }}.{{.ChecksumType}}sum"
-    }
-  ]
+  }]
 }
