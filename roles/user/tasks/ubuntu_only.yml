@@ -7,15 +7,18 @@
     group: '{{ item.gid }}'
     mode: "0750"
   with_items: "{{ real_users }}"
+  register: ubuntu_sftp
 - name: Set desktop trusted
   command:
     cmd: /usr/bin/dbus-launch gio set {{ item.homedir }}/Desktop/ubuntu-stu-home.desktop metadata::trusted true
   become: yes
   become_user: "{{ item.user }}"
   loop: "{{ real_users }}"
+  when: ubuntu_sftp.changed
 - name: Touch desktop file for refresh
   file:
     path: '{{ item.homedir }}/Desktop/ubuntu-stu-home.desktop'
     state: touch
     mode: 0750
   with_items: "{{ real_users }}"
+  when: ubuntu_sftp.changed
