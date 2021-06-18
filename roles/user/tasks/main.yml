@@ -84,5 +84,7 @@
   ignore_errors: yes
   loop: "{{ real_users }}"
 
+- include_tasks: ubuntu_only.yml
+  when: "ansible_distribution == 'Ubuntu'"
 - include_tasks: mint_only.yml
   when: "ansible_distribution == 'Linux Mint'"
