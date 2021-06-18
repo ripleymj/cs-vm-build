@@ -71,15 +71,6 @@
     key: "{{ stu_host_key }}"
     hash_host: yes
     state: present
-- name: Copy stu-home desktop
-  copy:
-    src: stu-home.desktop
-    dest: '{{ item.homedir }}/Desktop'
-    owner: '{{ item.uid }}'
-    group: '{{ item.gid }}'
-    mode: "0750"
-  with_items: "{{ real_users }}"
-  when: "ansible_distribution == 'Linux Mint'"
 - name: Add profile to user bashrc
   lineinfile:
     path: '{{ item.homedir }}/.bashrc'
@@ -92,21 +83,6 @@
     create: no
   ignore_errors: yes
   loop: "{{ real_users }}"
-- name: Remove Timeshift warning
-  dconf:
-    key: "/com/linuxmint/updates/warn-about-timeshift"
-    value: "false"
-    state: present
-  become: yes
-  become_user: "{{ item.user }}"
-  loop: "{{ real_users }}"
-  when: "ansible_distribution == 'Linux Mint'"
-- name: Remove mintupdate welcome page
-  dconf:
-    key: "/com/linuxmint/updates/show-welcome-page"
-    value: "false"
-    state: present
-  become: yes
-  become_user: "{{ item.user }}"
-  loop: "{{ real_users }}"
+
+- include_tasks: mint_only.yml
   when: "ansible_distribution == 'Linux Mint'"
