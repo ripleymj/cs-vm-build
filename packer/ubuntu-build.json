@@ -180,7 +180,7 @@
         "echo UPDATE",
         "apt-get update",
         "echo INSTALL",
-        "apt-get install -V -y git ansible aptitude",
+        "apt-get install -V -y git ansible",
         "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
         "cd /home/oem/cs-vm-build/scripts",
         "./oem-build",

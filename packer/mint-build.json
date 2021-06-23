@@ -102,7 +102,7 @@
       "while(pgrep -a apt-get); do sleep 1; done",
       "export DEBIAN_FRONTEND=noninteractive",
       "apt-get update",
-      "apt-get install -y git ansible aptitude",
+      "apt-get install -y git ansible",
       "git clone -b {{user `git_branch`}} {{user `git_repo`}}",
       "cd /home/oem/cs-vm-build/scripts",
       "./oem-build",
