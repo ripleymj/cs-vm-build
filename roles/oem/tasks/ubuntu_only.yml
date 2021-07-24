@@ -8,6 +8,7 @@
   command: snap refresh
 - name: Purge old snaps
   shell: |
+    set -o pipefail
     errors=0
     while read snapname revision; do
       snap remove "$snapname" --revision="$revision"
