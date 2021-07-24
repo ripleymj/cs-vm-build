@@ -8,10 +8,12 @@
   command: snap refresh
 - name: Purge old snaps
   shell: |
-    set -o pipefail && snap list --all | awk '/disabled/{print $1, $3}' |
+    errors=0
     while read snapname revision; do
       snap remove "$snapname" --revision="$revision"
-    done
+      errors=$((errors + $?))
+    done <<< "$(snap list --all | awk '/disabled/{print $1, $3}')"
+    exit $errors
   changed_when: false
 - name: Copy dconf config file
   copy:
