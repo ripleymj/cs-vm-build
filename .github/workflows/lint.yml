@@ -43,7 +43,6 @@ jobs:
           unzip -d $HOME/packer $HOME/packer.zip
       - name: Packer validate
         run: |
-          $HOME/packer/packer init packer/
           $HOME/packer/packer validate packer/ubuntu-build.json
           $HOME/packer/packer validate packer/mint-build.json
           $HOME/packer/packer validate -var-file=packer/beta-vars.json packer/mint-build.json
