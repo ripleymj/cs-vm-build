@@ -2,7 +2,7 @@
   "min_packer_version": "1.6.0",
   "variables": {
     "vm_name": "JMU Ubuntu",
-    "semester": "Fa21",
+    "semester": "Fa22",
 
     "build_id": "{{isotime \"2006-01-02\"}}",
 
@@ -12,8 +12,8 @@
     "headless": "false",
 
     "output_dir": "{{pwd}}/{{user `vm_name`}} {{user `semester`}}.utm/Images",
-    "mirror_url": "http://cdimage.ubuntu.com/focal/daily-live/current",
-    "iso_file": "focal-desktop-arm64.iso",
+    "mirror_url": "http://cdimage.ubuntu.com/jammy/daily-live/current",
+    "iso_file": "jammy-desktop-arm64.iso",
 
     "ssh_user": "oem",
     "ssh_pass": "oem"
@@ -55,7 +55,7 @@
       "vm_name": "image.qcow2",
       "net_device": "virtio-net",
       "disk_interface": "virtio",
-      "boot_wait": "25s",
+      "boot_wait": "45s",
       "boot_command": [
         "c<wait><wait>",
         "linux /casper/vmlinuz",
