@@ -43,11 +43,16 @@
       "iso_checksum": "file:{{user `mirror_url`}}/SHA256SUMS",
       "output_directory": "{{user `output_dir`}}",
       "shutdown_command": "echo -e \"{{user `ssh_pass`}}\\n\" | sudo -S poweroff",
+      "disk_cache": "unsafe",
       "disk_compression": "true",
-      "disk_size": "20G",
-      "disk_discard": "unmap",
       "disk_detect_zeroes": "unmap",
+      "disk_discard": "unmap",
+      "disk_size": "20G",
       "format": "qcow2",
+      "qemu_img_args": {
+          "create": ["-o", "preallocation=falloc"],
+          "convert": ["-o", "compression_type=zstd"]
+      },
       "http_directory": "http",
       "ssh_username": "{{user `ssh_user`}}",
       "ssh_password": "{{user `ssh_pass`}}",
