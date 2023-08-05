@@ -30,11 +30,10 @@
       "qemuargs": [
         [ "-bios", "/usr/share/qemu-efi-aarch64/QEMU_EFI.fd" ],
         [ "-boot", "strict=off" ],
-        [ "-vga", "vmware" ],
         [ "-cpu", "host" ],
         [ "-display", "gtk" ],
         [ "-device", "virtio-rng-pci" ],
-        [ "-device", "virtio-gpu-pci" ],
+        [ "-device", "virtio-gpu" ],
         [ "-device", "nec-usb-xhci,id=xhci" ],
         [ "-device", "usb-kbd,bus=xhci.0" ],
         [ "-device", "usb-tablet,bus=xhci.0" ]
