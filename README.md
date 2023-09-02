@@ -131,7 +131,8 @@ Linux and Windows hosts, but feedback on other platforms is always welcome.
 
 Due to difficulties with Packer packaging, this VM is frequently built with the
 latest version of Packer available directly from Hashicorp. Check the
-`main.pkr.hcl` file for the current minimum version required.
+`main.pkr.hcl` file for the current minimum version required. To install the
+required plugins, run `packer init .` within the `cs-vm-build/packer` directory.
 
 Once the prerequisites are installed, change into the `cs-vm-build/packer`
 directory and execute `packer build -only "*.mint" .`. This will take a
@@ -155,12 +156,18 @@ A large number of variables can be overridden at once by passing a `var-file`
 to Packer. An example of this is provided as `mint-beta.pkrvars.hcl`, and can be used
 like this:
 
-`packer build -var-file=mint-beta.pkrvars.hcl -only "*.mint" .`
+```bash
+packer init .
+packer build -var-file=mint-beta.pkrvars.hcl -only "*.mint" .
+```
 
 Packer allows further overrides, with precedence given to the last option in the
 command. For example, to build a beta image on Windows, use this command:
 
-`packer build -var-file=mint-beta.pkrvars.hcl -var 'audio=dsound' -only "*.mint" .`
+```bash
+packer init .
+packer build -var-file=mint-beta.pkrvars.hcl -var 'audio=dsound' -only "*.mint" .
+```
 
 ### Building Ubuntu images
 
@@ -169,12 +176,18 @@ fact, all previous commands have specifically excluded Ubuntu image builds). By
 default, the `packer` configuration will build both a Mint and Ubuntu VM. Try it
 with:
 
-`packer build .`
+```bash
+packer init .
+packer build .
+```
 
 Much as with the previous commands, you can build only an ubuntu-based image by
 running:
 
-`packer build -only "*.ubuntu" .`
+```bash
+packer init .
+packer build -only "*.ubuntu" .
+```
 
 Support for building beta variants of Ubuntu images is not currently supported.
 
