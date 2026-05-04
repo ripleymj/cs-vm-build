@@ -3,11 +3,11 @@
 eclipse:  # noqa var-naming[no-role-prefix]
   # Ensure the URL does not specify a mirror and that &r=1 is at the end, which
   # directly links to the file and not the web page with a download button
-  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2025-06/R/eclipse-java-2025-06-R-linux-gtk-{{ ansible_architecture }}.tar.gz&r=1'
-  url_backup: 'https://download.eclipse.org/technology/epp/downloads/release/2025-06/R/eclipse-java-2025-06-R-linux-gtk-{{ ansible_architecture }}.tar.gz'
+  url: 'https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2026-03/R/eclipse-java-2026-03-R-linux-gtk-{{ ansible_architecture }}.tar.gz&r=1'
+  url_backup: 'https://download.eclipse.org/technology/epp/downloads/release/2026-03/R/eclipse-java-2026-03-R-linux-gtk-{{ ansible_architecture }}.tar.gz'
   hash:
-    x86_64: 'd8871b00a7ac8b18cf8eab55fd6ae1cd73e8ef02'
-    aarch64: 'e7b6fd835880f7297fa27d1fe64a72f959b58f5c'
+    x86_64: '2f25adf74cac86a64cc24c454a039a3b02b93c5a'
+    aarch64: 'a65e3aac7efb11c3597082ffb72881470f0cf77c'
   zip: '{{ common_global_base_path }}/eclipse.tar.gz'
   install_path: '{{ common_global_base_path }}/eclipse'
 
