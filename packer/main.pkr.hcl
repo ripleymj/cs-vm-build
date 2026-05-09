@@ -11,7 +11,7 @@ packer {
 source "virtualbox-iso" "base-build" {
   cpus          = 2
   memory        = 4096
-  disk_size     = 20480
+  disk_size     = 25600
   guest_os_type = "Ubuntu_64"
   gfx_vram_size = 128
 

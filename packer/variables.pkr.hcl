@@ -4,7 +4,7 @@ variable "mint_version" {
     build_type = string
   })
   default = {
-    version    = "22.2"
+    version    = "22.3"
     build_type = null
   }
 }
@@ -53,7 +53,7 @@ variable "headless" {
 
 variable "semester" {
   type    = string
-  default = "Fa25"
+  default = "Sp26"
 }
 
 variable "ssh_pass" {
