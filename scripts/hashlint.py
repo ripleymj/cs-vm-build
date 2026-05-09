@@ -12,10 +12,7 @@ import sys
 from collections import namedtuple
 from pathlib import Path
 
-# Importing these types using in the string type hints is helpful for some
-# editors to actually support hinting for these types.
-# pylint: disable=unused-import
-from typing import Any, Dict, List, Set, Tuple, Type
+from typing import Any, Dict, List, Set, Tuple, Self
 
 import aiohttp
 import jinja2
@@ -38,7 +35,12 @@ class CacheItem:
     An item stored in the URL/ETag cache.
     """
 
-    def __init__(self, url, etag, last_modified, file_hash):
+    url: str
+    etag: str
+    last_modified: str
+    hash: str
+
+    def __init__(self, url: str, etag: str, last_modified: str, file_hash: str):
         self.url = url
         self.etag = etag
         self.last_modified = last_modified
@@ -63,7 +65,7 @@ class CacheItem:
         }
 
     @classmethod
-    def from_json(cls, data) -> "List[Type[CacheItem]]":
+    def from_json(cls, data) -> List[Self]:
         """
         Load an item from the cache.
         """
@@ -76,13 +78,13 @@ class CacheItem:
 
     @classmethod
     async def from_http_response(
-        cls, response: aiohttp.ClientResponse
-    ) -> "Type[CacheItem]":
+        cls, response: aiohttp.ClientResponse, request_url: str
+    ) -> Self:
         """
         Parse a cache item from an HTTP response
         """
         headers = response.headers
-        url = response.url
+        url = request_url
         data = await response.read()
         file_hash = hashlib.sha1(data).hexdigest()
 
@@ -93,6 +95,8 @@ class Cache:
     """
     A cache of all downloaded items.
     """
+
+    _items: List[CacheItem]
 
     def __init__(self):
         self._items = []
@@ -105,6 +109,11 @@ class Cache:
             match = matches[0]
             self._items.remove(match)
         self._items.append(item)
+
+    def __delitem__(self, url):
+        if matches := [cached for cached in self._items if cached.url == url]:
+            for match in matches:
+                self._items.remove(match)
 
     def __bool__(self):
         return bool(self._items)
@@ -119,7 +128,7 @@ class Cache:
         return f"<Cache items={self._items!r}>"
 
     @classmethod
-    def from_json(cls, data: Dict[str, Dict[str, str]]) -> 'Type[Cache]':
+    def from_json(cls, data: Dict[str, Dict[str, str]]) -> Self:
         """
         Load a cache from a dictionary.
         """
@@ -160,6 +169,7 @@ async def check_software_hash(
     """
 
     headers = {}
+    cache_item = None
     if check_data.url in cache:
         cache_item = cache[check_data.url]
         if cache_item.etag:
@@ -169,14 +179,27 @@ async def check_software_hash(
 
     try:
         async with session.get(
-            check_data.url, headers=headers, timeout=600
+            check_data.url,
+            headers=headers,
+            timeout=aiohttp.ClientTimeout(total=600),
         ) as response:
             if response.status == 200:
-                cache_item = await CacheItem.from_http_response(response)
+                cache_item = await CacheItem.from_http_response(
+                    response, check_data.url
+                )
                 cache[check_data.url] = cache_item
-    except aiohttp.ClientError:
+            elif response.status == 304:
+                # The cached data matched (Not Modified) so there's nothing to do
+                cache[check_data.url] = cache_item
+            else:
+                print(
+                    f"{check_data.source_file}: Fetch failed {check_data.url} ({response.status})",
+                    file=sys.stderr,
+                )
+                return False
+    except aiohttp.ClientError as client_error:
         print(
-            f"{check_data.source_file}: Unable to download {check_data.url}",
+            f"{check_data.source_file}: Unable to download {check_data.url} ({client_error})",
             file=sys.stderr,
         )
         return False
@@ -205,7 +228,9 @@ def process_variable(source: str, variable: str, value: str) -> str:
     return template.render(**{variable: value})
 
 
-def urls_for_file(file: str, ansible_data: Dict[str, Any], lookup_data: Dict[str, Any]):
+def urls_for_file(
+    file: str, ansible_data: Dict[str, Any], lookup_data: Dict[str, Any]
+) -> set[CheckData]:
     """
     Return a set of all URLs in the given file key in the URLs mapping.
     """
@@ -240,6 +265,15 @@ def load_cache() -> Cache:
     return Cache()
 
 
+def trim_cache(cache, urls):
+    """
+    Trim the cache to only keep current URLs
+    """
+    for item in cache:
+        if item not in urls:
+            del cache[item]
+
+
 def write_cache(cache: Cache):
     """
     Save the cache to disk.
@@ -249,7 +283,7 @@ def write_cache(cache: Cache):
         json.dump(cache.to_json(), cache_file, indent=4)
 
 
-def get_urls() -> Tuple[Set[str], int]:
+def get_urls() -> Tuple[Set[CheckData], int]:
     """
     Load the list of URLs to validate hashes for as well as the number of errors
     encountered parsing the list.
@@ -292,9 +326,10 @@ async def main():
         for result in await asyncio.gather(*tasks):
             # This relies on the fact that True gets coerced to 1 and that False gets
             # coerced to 0 when converted to an integer. The check method returns True
-            # on success and we need to count failures.
+            # on success, and we need to count failures.
             errors += not result
 
+    trim_cache(cache, [check_data.url for check_data in to_check])
     write_cache(cache)
     print(f"Wrote cache: {cache}")
     return errors
